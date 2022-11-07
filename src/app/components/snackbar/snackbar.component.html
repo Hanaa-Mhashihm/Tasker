@@ -1,0 +1,21 @@
+<div class="snackbar">
+
+  <!-- for error messages -->
+  <div *ngIf= "!isSuccess()" class="err icon">
+    <i   class="fa fa-times-circle" ></i>
+    
+  </div>
+
+  <!-- for succesful messages -->
+  <div *ngIf= "isSuccess()" class="success icon">
+    <i class="fa fa-check-circle"></i>
+    
+  </div>
+  <div class="message">
+<div class="error">{{data.message}}</div>
+
+  </div>
+  <div class="dismiss">
+    <i class="fa fa-close" (click)="closeDialog()"></i>
+  </div>
+</div>

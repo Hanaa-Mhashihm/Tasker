@@ -1,0 +1,14 @@
+<mat-card class="mat-elevation-z0">
+    <div class="warningBox">
+        <h1 mat-dialog-title>{{data.boxTitle}}</h1>
+        <img *ngIf= "!isSuccess()" src="/assets/images/svg/approved_x.png" alt="cross">
+            <img *ngIf= "isSuccess()"  src="/assets/images/svg/approved_tick.png" alt="tick">
+        <div mat-dialog-content>
+            <p>{{data.errorMessage}}</p>
+            
+        </div>
+        <div class="cen">
+            <button class="add_btn" mat-button (click)="closeDialog()">Ok</button>
+        </div>
+    </div>    
+</mat-card>

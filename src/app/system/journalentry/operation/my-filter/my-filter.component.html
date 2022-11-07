@@ -1,0 +1,149 @@
+
+<section class="section" [dir]="direction">
+  <div class="bigMain" fxLayout>
+    <h3 class="fontY">
+      {{ header  }} 
+    </h3>
+    <img (click)="onCancel()" class="cancel_Img" src="../../../../assets/images/svg/close.png" alt="">
+  </div>
+  
+  <div class="example-container" [dir]="direction">
+  
+    <div
+      class="example-list"
+      >
+      <div class="example-box" fxLayout="column" fxLayoutGap="15px" *ngFor="let item of done; let i = index">
+        <div>
+          {{item.displayName}}
+        </div>
+        <div>
+          <div fxLayout="column" fxLayoutGap="10px" *ngIf="item.frontEndType == 'Date'" >
+            <mat-form-field class="inputD" appearance="fill">
+              <mat-label>Operation</mat-label>
+              <mat-select
+                [(ngModel)]="item.operation"
+                name="item.displayName"
+                #choosedValue (valueChange)="onNumDate(choosedValue.value, i)"
+              >
+                <mat-option
+                  *ngFor="let choice of item.array1"
+                  [value]="choice.name"
+                  
+                >
+                  {{ choice.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div fxLayout fxLayoutGap="10px" fxLayout.xs="column">
+              <mat-form-field class="inputW" *ngIf="item.permission1" appearance="outline">
+                <mat-label>{{ item.operation }}</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item.value1"
+                  name="{{ item.displayName }}"
+                  type="date"
+                  placeholder="Date"
+                />
+    
+    
+              </mat-form-field>
+              <mat-form-field class="inputW" *ngIf="item.permission2" appearance="outline">
+                
+                <input
+                  matInput
+                  [(ngModel)]="item.value2"
+                  name="{{ item.displayName }}"
+                  type="date"
+                  placeholder="Date"
+                />
+    
+    
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxLayout="column" fxLayoutGap="10px" *ngIf="item.frontEndType == 'Number'" >
+            <mat-form-field class="inputD" appearance="fill">
+              <mat-label>Operation</mat-label>
+              <mat-select
+                [(ngModel)]="item.operation"
+                name="item.displayName"
+                #choosedValue (valueChange)="onNumDate(choosedValue.value, i)"
+              >
+                <mat-option
+                  *ngFor="let choice of item.array1"
+                  [value]="choice.name"
+                  
+                >
+                  {{ choice.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div fxLayout fxLayoutGap="10px" fxLayout.xs="column">
+              <mat-form-field class="inputW" *ngIf="item.permission1" appearance="outline">
+              
+                <input
+                  matInput
+                  [(ngModel)]="item.value1"
+                  name="{{ item.displayName }}"
+                  type="number"
+                  placeholder="Number"
+                />
+    
+    
+              </mat-form-field>
+              <mat-form-field class="inputW" *ngIf="item.permission2" appearance="outline">
+                
+                <input
+                  matInput
+                  [(ngModel)]="item.value2"
+                  name="{{ item.displayName }}"
+                  type="number"
+                  placeholder="Number"
+                />
+    
+    
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxLayout fxLayout.xs="column" fxLayoutGap="10px" *ngIf="item.frontEndType == 'Text'" >
+            <mat-form-field class="inputD" appearance="fill">
+              <mat-label>Operation</mat-label>
+              <mat-select
+                [(ngModel)]="item.operation"
+                name="item.displayName"
+                #choosedValue (valueChange)="onText(choosedValue.value, i)"
+              >
+                <mat-option
+                  *ngFor="let choice of item.array2"
+                  [value]="choice.name"
+                  
+                >
+                  {{ choice.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field  *ngIf="item.permission1" appearance="outline">
+              <mat-label>{{ item.operation }}</mat-label>
+              <input
+                matInput
+                [(ngModel)]="item.value1"
+                name="{{ item.displayName }}"
+                type="text"
+                placeholder="Type some text"
+              />
+  
+  
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="btn-container">
+    <button class="BtnC" (click)="onCancel()" mat-button color="warn" type="submit">{{cancel}}</button>
+    <button class="BtnS" (click)="onApply()" mat-button color="primary" type="submit">{{submit}}</button>
+  </div>
+  
+</section>

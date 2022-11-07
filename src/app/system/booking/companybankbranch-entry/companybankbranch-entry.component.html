@@ -1,0 +1,399 @@
+<!-- 
+
+<section class="section" [dir]="direction">
+  <div class="bigMain" fxLayout>
+    <h3 class="fontY">
+      {{ dialog_title  }} 
+    </h3>
+    <img (click)="onCancel()" class="cancel_Img" src="../../../../assets/images/svg/close.png" alt="">
+  </div>
+
+
+  <form class="Main" [dir]="direction"  >
+    <div class="container">
+      <mat-grid-list
+        [cols]="breakpoint"
+        rowHeight="105px"
+        (window:resize)="onResize($event)"
+
+      >
+        <div  *ngFor="let source of light">
+          <div [ngSwitch]="source.type">
+            <mat-grid-tile *ngSwitchCase="'Date'">
+              <div [ngSwitch]="source.access">
+                <mat-form-field *ngSwitchCase="'Editable'" appearance="outline">
+                  <mat-label>{{ source.label }}</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="source.value"
+                    name="{{ source.label }}"
+                    type="date"
+                    placeholder="Date"
+                  />
+
+
+                </mat-form-field>
+                <div
+                *ngSwitchCase="'ViewOnly'"
+                fxLayout
+                fxLayoutGap="10px"
+
+                class="radio"
+                >
+                  <h3>{{ source.label }}:</h3>
+                  <h5>{{ source.value }}</h5>
+                </div>
+
+              </div>
+
+            </mat-grid-tile>
+            <mat-grid-tile *ngSwitchCase="'Number'">
+              <div [ngSwitch]="source.access">
+                <mat-form-field  *ngSwitchCase="'Editable'" appearance="outline">
+                  <mat-label>{{ source.label }}</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="source.value"
+                    name="{{ source.label }}"
+                    type="textbox"
+                    
+                    placeholder="Number"
+                    appIsDecimalDirective
+                  />
+
+
+                </mat-form-field>
+
+                <div
+                  fxLayout
+                  fxLayoutGap="10px"
+                  *ngSwitchCase="'ViewOnly'"
+                  class="radio"
+                >
+                  <h3>{{ source.label }}:</h3>
+                  <h5>{{ source.value }}</h5>
+                </div>
+              </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile *ngSwitchCase="'Text'">
+              <div [ngSwitch]="source.access">
+                <mat-form-field *ngSwitchCase="'Editable'" appearance="outline">
+                  <mat-label>{{ source.label }}</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="source.value"
+                    name="{{ source.label }}"
+                    type="text"
+
+                    placeholder="Type some text"
+                  />
+
+
+                </mat-form-field>
+
+                <div
+                  fxLayout
+                  fxLayoutGap="10px"
+                  *ngSwitchCase="'ViewOnly'"
+                  class="radio"
+                >
+                  <h3>{{ source.label }}:</h3>
+                  <h5>{{ source.value }}</h5>
+                </div>
+              </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile *ngSwitchCase="'Checkbox'">
+              <div [ngSwitch]="source.access">
+                <mat-checkbox
+                *ngSwitchCase="'Editable'"
+                [ngModel]="source.value == '1' ? true : source.value == '0' ? false : null"
+                (ngModelChange)="source.value = $event ? '1' : '0'"
+
+
+                name="{{ source.label }}"
+                >{{ source.label }}</mat-checkbox
+              >
+
+              <div
+                fxLayout
+                fxLayoutGap="10px"
+                *ngSwitchCase="'ViewOnly'"
+                class="radio"
+              >
+                <h3>{{ source.label }}:</h3>
+                <h5>{{ source.value }}</h5>
+              </div>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile *ngSwitchCase="'Time'">
+              <div [ngSwitch]="source.access">
+                <mat-form-field *ngSwitchCase="'Editable'" appearance="outline">
+                  <input
+                    [(ngModel)]="source.value"
+                    name="{{ source.label }}"
+                    matInput
+                    type="time"
+                    placeholder="start date"
+                  />
+                </mat-form-field>
+
+                <div
+                  fxLayout
+                  fxLayoutGap="10px"
+                  *ngSwitchCase="'ViewOnly'"
+                  class="radio"
+                >
+                  <h3>{{ source.label }}:</h3>
+                  <h5>{{ source.value }}</h5>
+                </div>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile *ngSwitchCase="'TextArea'">
+              <div [ngSwitch]="source.access">
+                <mat-form-field *ngSwitchCase="'Editable'" appearance="outline">
+                  <mat-label>{{ source.label }}</mat-label>
+                  <textarea
+                    matInput
+                    rows="2"
+                    [(ngModel)]="source.value"
+
+                    name="{{ source.label }}"
+                    type="text"
+                    placeholder="Type some text"
+                  ></textarea>
+
+
+                </mat-form-field>
+
+                <div
+                  fxLayout
+                  fxLayoutGap="10px"
+                  *ngSwitchCase="'ViewOnly'"
+                  class="radio"
+                >
+                  <h3>{{ source.label }}:</h3>
+                  <h5>{{ source.value }}</h5>
+                </div>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile *ngSwitchCase="'dropdown'">
+              <div [ngSwitch]="source.access">
+                <div *ngSwitchCase="'Editable'">
+                  <div *ngIf="source.tableColumnId == 28">
+                    <div fxLayout="column">
+                      <mat-checkbox [(ngModel)]="checkParentAccountId" (change)="onParent()" name="parent">is sub-account</mat-checkbox>
+                    <mat-form-field *ngIf="checkParentAccountId"  appearance="fill">
+                      <mat-label>{{ source.label }}</mat-label>
+                      <mat-select
+                        [(ngModel)]="+source.value"
+                        name="{{ source.label }}"
+                      >
+                        <mat-option
+                          *ngFor="let choice of source.myarray"
+                          [value]="choice.id"
+                        >
+                          {{ choice.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    </div>
+                  </div>
+                  <div *ngIf="source.tableColumnId != 28">
+                    <mat-form-field  appearance="fill">
+                      <mat-label>{{ source.label }}</mat-label>
+                      <mat-select
+                        [(ngModel)]="+source.value"
+                        name="{{ source.label }}"
+                      >
+                        <mat-option
+                          *ngFor="let choice of source.myarray"
+                          [value]="choice.id"
+                        >
+                          {{ choice.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    
+                  </div>
+                </div>
+
+                <div
+                  fxLayout
+                  fxLayoutGap="10px"
+                  *ngSwitchCase="'ViewOnly'"
+                  class="radio"
+                >
+                  <h3>{{ source.label }}:</h3>
+                  <h5>{{ source.value }}</h5>
+                </div>
+              </div>
+            </mat-grid-tile>
+
+
+              <div *ngIf="spacezone">
+                <mat-grid-tile *ngSwitchCase="'space'">
+                  <div [ngSwitch]="source.access">
+                    <div *ngSwitchCase="'Editable'" class="space"></div>
+
+                  <div
+                    fxLayout
+                    fxLayoutGap="10px"
+                    *ngSwitchCase="'ViewOnly'"
+                    class="radio"
+                  >
+                    <h3>{{ source.label }}:</h3>
+                    <h5>{{ source.value }}</h5>
+                  </div>
+                  </div>
+                </mat-grid-tile>
+              </div>
+
+          </div>
+        </div>
+      </mat-grid-list>
+    </div>
+  </form>
+  <div class="btn-container" fxLayoutGap="10px">
+    <button class="BtnC" (click)="onCancel()" mat-button color="warn" type="submit">{{cancel}}</button>
+    <button class="BtnS" (click)="onSubmit()" mat-button color="primary" type="submit">{{submit}}</button>
+  </div>
+</section>
+
+ -->
+ <!-- <section class="sec"  >
+
+
+</section> -->
+
+<section class="section" fxLayout="column" fxLayoutAlign="start " fxLayoutGap="20px">
+  <div>
+    <button class="add_btn" mat-button color="primary" (click)="onAddRecord()" ><mat-icon >add</mat-icon></button>
+  </div>
+  <div [dir]="direction" fxHide.xs class="toolSection" mat-elevation-z8>
+    <table mat-table [dataSource]="dataSource"  style="width: 100%">
+
+      <ng-container matColumnDef="expType">
+        <mat-header-cell class="centH" *matHeaderCellDef> {{expType}} </mat-header-cell>
+        <mat-cell mat-cell class="cent" *matCellDef="let row">
+          <mat-form-field class="mat-form-fieldC">
+            <input matInput type="text"  [(ngModel)]="row.expType" name="expType">
+          </mat-form-field>
+        </mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="supplier">
+        <mat-header-cell class="centH" *matHeaderCellDef> {{supplier}} </mat-header-cell>
+        <mat-cell mat-cell class="cent" *matCellDef="let row" >
+          <div class="select-wrap">
+            <app-my-test-auto  cssClass="inside" style="width: 100%;" refId="supplierid" refCondition="active=1 and deleted=0 and supplierid>1" refTable="supplier" refColumn="suppliername"  [initialValue]="row.supplier" (resultId)="row.supplier=$event"></app-my-test-auto>
+          </div>
+          <!-- <mat-form-field class="mat-form-fieldC">
+            <mat-select  name="supplier" [(ngModel)]="row.supplier">
+              <mat-option  *ngFor="let item of row.suppOption" [value]="item.id">
+                {{item.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field> -->
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="currency">
+        <mat-header-cell class="centH" *matHeaderCellDef> {{currency}} </mat-header-cell>
+        <mat-cell mat-cell class="cent" *matCellDef="let row">
+          <div class="select-wrap">
+            <app-my-test-auto  cssClass="inside" style="width: 100%;" refId="miscdetailid" refCondition="miscid=17" refTable="miscdetail" refColumn="misctext"  [initialValue]="row.currency" (resultId)="row.currency=$event"></app-my-test-auto>
+          </div>
+          <!-- <mat-form-field class="mat-form-fieldC">
+            <mat-select  name="currency" [(ngModel)]="row.currency">
+              <mat-option  *ngFor="let item of row.currOption" [value]="item.id">
+                {{item.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field> -->
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="expDate">
+        <mat-header-cell class="centH" *matHeaderCellDef>{{expDate}}</mat-header-cell>
+        <mat-cell class="cent" mat-cell *matCellDef="let row">
+          <mat-form-field class="mat-form-fieldC" > 
+            <input matInput name="expDate"  type="date" [(ngModel)]="row.expDate" > 
+          </mat-form-field> 
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="forexRate">
+        <mat-header-cell class="centH" *matHeaderCellDef> {{forexRate}} </mat-header-cell>
+        <mat-cell mat-cell class="cent"  *matCellDef="let row">
+          <mat-form-field class="mat-form-fieldC">
+            <input matInput type="text"  [(ngModel)]="row.forexRate" name="forexRate">
+          </mat-form-field>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <mat-header-cell class="centH" *matHeaderCellDef> {{amount}} </mat-header-cell>
+        <mat-cell mat-cell class="cent" *matCellDef="let row">
+          <mat-form-field class="mat-form-fieldC">
+            <input matInput type="text"  [(ngModel)]="row.amount" name="amount">
+          </mat-form-field>
+        </mat-cell>
+      </ng-container>
+      
+    <ng-container matColumnDef="delete">
+      <mat-header-cell class="centH" *matHeaderCellDef> {{delete}} </mat-header-cell>
+      <mat-cell mat-cell class="cent" *matCellDef="let row;let i = index;">
+        <button mat-icon-button (click)="deleteFun(i)">
+          <mat-icon small class="mat-icon material-icons" role="img" aria-hidden="true" color="warn">
+            delete
+          </mat-icon>
+        </button> 
+        </mat-cell>
+    </ng-container>
+    
+    
+      <mat-header-row class="headerRow" *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </table>
+  </div>
+  
+  <div class="bot">
+    <h3 class="fontY2 addCost">{{totalAddCost}}</h3>
+    <div class="botTotal">
+      <div fxLayout fxLayoutGap="5px">
+        <h4 class="fontY2">
+          {{inUSD}}
+        </h4>
+        <h4 class="fontY2">:</h4>
+        <h4 class="fontY2">
+          {{usdValue}} 
+        </h4>
+      </div>
+      <div fxLayout fxLayoutGap="5px">
+        <h4 class="fontY2">
+          {{inAED}}
+        </h4>
+        <h4 class="fontY2">:</h4>
+        <h4 class="fontY2">
+          {{aedValue}} 
+        </h4>
+    </div>
+    <div fxLayout fxLayoutGap="5px">
+      <h4 class="fontY2">
+        {{inSDG}}
+      </h4>
+      <h4 class="fontY2">:</h4>
+      <h4 class="fontY2">
+        {{sdgValue}} 
+      </h4>
+  </div>
+  </div>
+  
+  <div class="btn-container2" fxLayoutGap="10px">
+    <button class="BtnC" type="button" mat-button (click)="onCancel()">{{cancel}}</button>
+    <button mat-button class="BtnS" (click)="onSubmit2()">{{submit}}</button>
+  </div>
+  </div>
+</section>

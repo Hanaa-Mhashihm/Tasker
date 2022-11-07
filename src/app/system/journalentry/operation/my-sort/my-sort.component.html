@@ -1,0 +1,48 @@
+
+<section [dir]="direction">
+  <div class="bigMain" fxLayout>
+    <h3 class="fontY">
+      {{ header  }} 
+    </h3>
+    <img (click)="onCancel()" class="cancel_Img" src="../../../../assets/images/svg/close.png" alt="">
+  </div>
+  
+  <div class="example-container" [dir]="direction">
+  
+    <div
+      cdkDropList
+      [cdkDropListData]="done"
+      class="example-list"
+      (cdkDropListDropped)="drop($event)">
+      <div class="example-box" fxLayout fxLayout.xs="column"  *ngFor="let item of done" cdkDrag>
+        <div>
+          {{item.name}}
+        </div>
+        <div>
+          <mat-form-field  appearance="fill">
+            <mat-label>Operation</mat-label>
+            <mat-select
+              [(ngModel)]="item.value"
+              name="item.name"
+            >
+              <mat-option
+                *ngFor="let choice of choices"
+                [value]="choice.name"
+                
+              >
+                {{ choice.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="btn-container">
+    <button class="BtnC" (click)="onCancel()" mat-button color="warn" type="submit">{{cancel}}</button>
+    <button class="BtnS" (click)="onApply()" mat-button color="primary" type="submit">{{submit}}</button>
+  </div>
+  
+</section>
