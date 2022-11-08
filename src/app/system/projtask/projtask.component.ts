@@ -20,6 +20,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MyFilterComponent } from '../journalentry/operation/my-filter/my-filter.component';
 import { MySortComponent } from '../journalentry/operation/my-sort/my-sort.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-projtask',
@@ -29,6 +30,7 @@ import { MySortComponent } from '../journalentry/operation/my-sort/my-sort.compo
 
 export class ProjTaskComponent implements OnInit {
 
+  taskFormGroup: FormGroup;
     displayedColumns: string[] =
         ['select', 'Project', 'Task', 'Status', 'Comment', 'Assigned', 'Due', 'To', 'By', 'Phase', 'Responsible'];
         // 'projTaskId'
@@ -77,6 +79,33 @@ export class ProjTaskComponent implements OnInit {
   userId: any;
   tasks: any[] = [];
   checkAssign: any;
+  isShown: boolean = false;
+
+  items = [
+    {'id': 1, 'name': 'Outliner'}, 
+    {'id': 2, 'name': 'Green field'}, 
+    {'id': 3, 'name': 'Tasker'}
+  ];
+  status = [
+    {'id': 1, 'name': 'To do'}, 
+    {'id': 2, 'name': 'Doing'}, 
+    {'id': 3, 'name': 'Done'}
+  ];
+  assignedTo = [
+    {'id': 1, 'name': 'Hanaa'}, 
+    {'id': 2, 'name': 'Milesh'}, 
+    {'id': 3, 'name': 'Yousif'}
+  ];
+  phase = [
+    {'id': 1, 'name': 'Analysis'}, 
+    {'id': 2, 'name': 'Develop'}, 
+    {'id': 3, 'name': 'Impl'},
+    {'id': 4, 'name': 'Testing'}
+  ];
+  responsible = [
+    {'id': 1, 'name': 'External'}, 
+    {'id': 2, 'name': 'Internal'}
+  ];
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -103,7 +132,8 @@ export class ProjTaskComponent implements OnInit {
         private _msg: MessageBoxService,
         private _auth: AuthService,
         private _select: SelectService,
-        private projtaskservice: ProjTaskService
+        private projtaskservice: ProjTaskService,
+        private fb: FormBuilder
       ) {
         this.pTableName = 'ProjTask';
         this.pScreenId = 116;
@@ -126,7 +156,27 @@ export class ProjTaskComponent implements OnInit {
     }
     this._cf.setSort("")
     this._cf.setFilter("")
-      this.refreshMe();
+    this.refreshMe();
+    this.initForm();
+  }
+
+  initForm() {
+    this.taskFormGroup = this.fb.group({
+      projectName: [null, Validators.required],
+      taskName: [null, Validators.required],
+      statusName: [null, Validators.required],
+      comment: [null, Validators.required],
+      dateAssign: [null, Validators.required],
+      dueDate: [null, Validators.required],
+      assignedToName: [null, Validators.required],
+      assignedByName: [null, Validators.required],
+      categoryName: [null, Validators.required],
+      responsibleName: [null, Validators.required],
+    })
+  }
+
+  get taskForm() {
+    return this.taskFormGroup.controls;
   }
 
   refreshMe() {
@@ -467,4 +517,12 @@ export class ProjTaskComponent implements OnInit {
     }
   };
 
+  showForm() {
+    this.isShown = true;
+  }
+
+  onSubmit() {
+    let data = this.taskFormGroup.value;
+    console.log('data', data)
+  }
 }

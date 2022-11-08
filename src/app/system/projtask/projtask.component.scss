@@ -167,6 +167,16 @@
   margin: 5px 0;
   width: 100%;
 }
+
+/* Form Design */
+.controls {
+  height: 60px;
+  width: 100%;
+  border: none;
+  border-right: 1px solid rgb(242, 241, 241);
+  border-bottom: 1px solid rgb(242, 241, 241);
+  border-radius: 3px;
+}
 @media (max-width: 600px) {
   .add_btn {
     background: #20bf6b;

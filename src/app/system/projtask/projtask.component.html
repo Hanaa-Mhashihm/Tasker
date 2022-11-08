@@ -150,16 +150,75 @@
       </mat-cell>
     </ng-container>
 
+    
     <mat-header-row class="headerRow" *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
 
     <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onEdit(row.projTaskId)" class="rowR"
       [class.active]="clickedRows.has(row)"></mat-row>
 
+      <mat-row>
+        
+      </mat-row>
   </mat-table>
-  <form>
-    <input type="text" placeholder="+ New"/>
-    <input type="text" placeholder="test"/>
-  </form>
+  
+  <div style="overflow-x: scroll;">
+    <input type="text" placeholder="+ New" class="form-control" (click)="showForm()" *ngIf="!isShown"/>
+    <form [formGroup]="taskFormGroup" class="row d-flex m-0" *ngIf="isShown" >
+      <!-- <input type="text" placeholder="+ New" class="controls col-lg-2"/> -->
+      
+      <mat-form-field  appearance="fill">
+        <mat-label>Project</mat-label>
+        <mat-select formControlName="projectName">
+          <mat-option *ngFor="let item of items" [value]="item.id">
+            {{ item.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <input type="text"  class="controls col-lg-1" formControlName="taskName" />
+      <!-- <input type="text"  class="controls col-lg-1 "/> -->
+      <mat-form-field  appearance="fill">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="statusName">
+          <mat-option *ngFor="let item of status" [value]="item.id">
+            {{ item.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <input type="text"  class="controls col-lg-1" formControlName="comment" />
+      <input type="date" class="controls col-lg-1" formControlName="dateAssign" />
+      <input type="date" class="controls col-lg-1" formControlName="dueDate"/>
+      <!-- <input type="text" class="controls col-lg-1" formControlName="assignedToName" /> -->
+      <mat-form-field  appearance="fill">
+        <mat-label>Assigned to</mat-label>
+        <mat-select formControlName="assignedToName">
+          <mat-option *ngFor="let item of assignedTo" [value]="item.id">
+            {{ item.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <input type="text" class="controls col-lg-1" formControlName="assignedByName" />
+      <!-- <input type="text" class="controls col-lg-1" formControlName="categoryName" /> -->
+      <mat-form-field  appearance="fill">
+        <mat-label>Phase</mat-label>
+        <mat-select formControlName="categoryName">
+          <mat-option *ngFor="let item of phase" [value]="item.id">
+            {{ item.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <!-- <input type="text" class="controls col-lg-1" formControlName="responsibleName" /> -->
+      <mat-form-field  appearance="fill">
+        <mat-label>Responsible</mat-label>
+        <mat-select formControlName="responsibleName">
+          <mat-option *ngFor="let item of responsible" [value]="item.id">
+            {{ item.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button class="btn btn-primary" (click)="onSubmit()">Save</button>
+    </form>
+  </div>
 </Section>
 
 
@@ -172,10 +231,6 @@
           <h3>:</h3>
           <h3 class="indexContent">{{ index.projTaskId }}</h3>
         </div>
-
-
-
-
       </div>
       <div>
         <button class="Btn" mat-icon-button [matMenuTriggerFor]="menu">
