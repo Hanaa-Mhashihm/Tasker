@@ -30,7 +30,8 @@ import { MySortComponent } from '../journalentry/operation/my-sort/my-sort.compo
 export class ProjTaskComponent implements OnInit {
 
     displayedColumns: string[] =
-        ['select','projTaskId', 'Project', 'Task', 'Status', 'Comment', 'Assigned', 'Due', 'To', 'By', 'Phase', 'Responsible'];
+        ['select', 'Project', 'Task', 'Status', 'Comment', 'Assigned', 'Due', 'To', 'By', 'Phase', 'Responsible'];
+        // 'projTaskId'
 
     dataSource: any;
     isLastPage = false;
@@ -74,6 +75,7 @@ export class ProjTaskComponent implements OnInit {
   clickedRows = new Set<ProjTaskModel>();
   indexes!: any[];
   userId: any;
+  tasks: any[] = [];
   checkAssign: any;
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -182,10 +184,16 @@ export class ProjTaskComponent implements OnInit {
           if (this._auth.getUniqueName() === 'milesh@markoncs.com' || 'omi@markoncs.com' || 's.muawia@markoncs.com') {
             this.totalRecords = result[0].totalRecords;
             this.recordsPerPage = this.recordsPerPage;
-            this.dataSource = new MatTableDataSource(result);
+            result.forEach((item: any) => {
+              if(item.assignedBy == this.userId || item.assignedTo == this.userId) {
+                item= item;
+                this.tasks.push(item)
+              }
+            })
+            console.log('items', this.tasks)
+            this.dataSource = this.tasks;
             this.indexes = result;
-            console.log('result', this.indexes);  
-            this.checkAssigned(this.indexes);
+            console.log('result', this.indexes);
           }else {
             var newResult = []
             for (let j = 0; j < result.length; j++) {
@@ -216,12 +224,12 @@ export class ProjTaskComponent implements OnInit {
     // });
   }
 
-  checkAssigned(items: any) {
-    items.forEach((item: any) => {
-     this.checkAssign = item;
-    });
-    console.log('checkAssign', this.checkAssign)
-  }
+  // checkAssigned(items: any) {
+  //   items.forEach((item: any) => {
+  //    this.checkAssign = item;
+  //   });
+  //   console.log('checkAssign', this.checkAssign)
+  // }
   onClearSort() {
     this.pageData.sort = ""
     this._cf.setSort("")

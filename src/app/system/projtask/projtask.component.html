@@ -56,87 +56,67 @@
         </mat-checkbox>
       </mat-header-cell>
       <mat-cell class="cbPad" *matCellDef="let row; let i = index">
-        <mat-checkbox *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId"  (click)="$event.stopPropagation()"
-         (change)="$event ? selection.toggle(row) : null; onId(i,row)" [checked]="selection.isSelected(row)">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null; onId(i,row)"
+          [checked]="selection.isSelected(row)">
         </mat-checkbox>
+
       </mat-cell>
+
     </ng-container>
 
-    <ng-container matColumnDef="projTaskId">
+    <!-- <ng-container matColumnDef="projTaskId">
       <mat-header-cell class="centH" *matHeaderCellDef>{{projTaskId}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">
-        <span *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId">{{row.projTaskId}}</span>
-      </mat-cell>
-    </ng-container>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.projTaskId}}</mat-cell>
+    </ng-container> -->
 
     <ng-container matColumnDef="Project">
       <mat-header-cell class="centH" *matHeaderCellDef>{{Project}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">
-        <span *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId">{{row.projectName}}</span>
-      </mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.projectName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Task">
       <mat-header-cell class="centH" *matHeaderCellDef>{{Task}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">
-        <span *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId">{{row.taskName}}</span>
-      </mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.taskName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Status">
       <mat-header-cell class="centH" *matHeaderCellDef>{{Status}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">
-        <span *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId">{{row.statusName}}</span>
-      </mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.statusName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Comment">
       <mat-header-cell class="centH" *matHeaderCellDef>{{Comment}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">
-        <span *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId">{{row.comment}}</span>
-      </mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.comment}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Assigned">
       <mat-header-cell class="centH" *matHeaderCellDef>{{Assigned}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">
-        <span *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId">{{row.dateAssign}}</span>
-      </mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.dateAssign}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Due">
       <mat-header-cell class="centH" *matHeaderCellDef>{{Due}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">
-        <span *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId">{{row.dueDate}}</span>
-      </mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.dueDate}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="To">
       <mat-header-cell class="centH" *matHeaderCellDef>{{To}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">
-        <span *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId">{{row.assignedToName}}</span>
-      </mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.assignedToName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="By">
       <mat-header-cell class="centH" *matHeaderCellDef>{{By}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">
-        <span *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId">{{row.assignedByName}}</span>
-      </mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.assignedByName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Phase">
       <mat-header-cell class="centH" *matHeaderCellDef>{{Phase}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">
-        <span *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId">{{row.categoryName}}</span>
-      </mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.categoryName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Responsible">
       <mat-header-cell class="centH" *matHeaderCellDef>{{Responsible}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">
-        <span *ngIf="row.assignedBy == this.userId || row.assignedTo == this.userId">{{row.responsibleName}}</span>
-      </mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.responsibleName}}</mat-cell>
     </ng-container>
 
     <!-- edit Column -->
@@ -171,12 +151,15 @@
     </ng-container>
 
     <mat-header-row class="headerRow" *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-    
+
     <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onEdit(row.projTaskId)" class="rowR"
       [class.active]="clickedRows.has(row)"></mat-row>
 
   </mat-table>
-
+  <form>
+    <input type="text" placeholder="+ New"/>
+    <input type="text" placeholder="test"/>
+  </form>
 </Section>
 
 
