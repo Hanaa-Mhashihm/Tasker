@@ -16,6 +16,7 @@ export class AuthService {
 
   userToken: any;
   userRole: any;
+  userId: any;
   decodedToken: any;
   jwtHelper: JwtHelperService = new JwtHelperService();
 
@@ -33,7 +34,7 @@ export class AuthService {
       map((response: Response) => {
         const user = response.json();
         if (user) {
-          console.log(user);
+          console.log('user', user);
           //step 4 of security(next: login.model.ts)
           localStorage.setItem(this._globals.baseAppName + '_token', user.token);
           // console.log('Token: '+localStorage.getItem(this._globals.baseAppName + '_token'));
@@ -44,7 +45,8 @@ export class AuthService {
           this.userRole = user.roleId.toString();
           this.userToken = user.token;
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
-
+          this.userId = user.userId;
+          localStorage.setItem('userId', this.userId);
           return response.json();
         } else {
           return null;

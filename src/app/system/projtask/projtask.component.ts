@@ -70,9 +70,11 @@ export class ProjTaskComponent implements OnInit {
 
   selection = new SelectionModel<ProjTaskModel>(true, []);;
   pageData :any
-    model!: Send;
-    clickedRows = new Set<ProjTaskModel>();
-    indexes!: any[];
+  model!: Send;
+  clickedRows = new Set<ProjTaskModel>();
+  indexes!: any[];
+  userId: any;
+  checkAssign: any;
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -107,12 +109,14 @@ export class ProjTaskComponent implements OnInit {
         this.recordsPerPage = 10;
         this.currentPageIndex = 1;
         this.menuId = 1019106011;
+        this.userId = localStorage.getItem('userId');
+        console.log('user id', this.userId)
       }
 
   ngOnInit() {
     this.pageData = {
       tableId: this.pTableId,
-      userId: 26,
+      userId: this.userId,
       recordsPerPage: 10,
       pageNo: 1,
       sort: '',
@@ -179,8 +183,9 @@ export class ProjTaskComponent implements OnInit {
             this.totalRecords = result[0].totalRecords;
             this.recordsPerPage = this.recordsPerPage;
             this.dataSource = new MatTableDataSource(result);
-            this.indexes = result
-            
+            this.indexes = result;
+            console.log('result', this.indexes);  
+            this.checkAssigned(this.indexes);
           }else {
             var newResult = []
             for (let j = 0; j < result.length; j++) {
@@ -196,22 +201,27 @@ export class ProjTaskComponent implements OnInit {
          
         }
       );
-
-    this._auth.getScreenRights(this.menuId).subscribe((rights: RightModel) => {
-      this.screenRights = {
-        amendFlag: true,
-        createFlag: true,
-        deleteFlag: true,
-        editFlag: true,
-        exportFlag: true,
-        printFlag: true,
-        reverseFlag: true,
-        shortCloseFlag: true,
-        viewFlag: true
-      };
-    });
+    // this._auth.getScreenRights(this.menuId).subscribe((rights: RightModel) => {
+    //   this.screenRights = {
+    //     amendFlag: true,
+    //     createFlag: true,
+    //     deleteFlag: true,
+    //     editFlag: true,
+    //     exportFlag: true,
+    //     printFlag: true,
+    //     reverseFlag: true,
+    //     shortCloseFlag: true,
+    //     viewFlag: true
+    //   };
+    // });
   }
 
+  checkAssigned(items: any) {
+    items.forEach((item: any) => {
+     this.checkAssign = item;
+    });
+    console.log('checkAssign', this.checkAssign)
+  }
   onClearSort() {
     this.pageData.sort = ""
     this._cf.setSort("")
@@ -248,7 +258,7 @@ export class ProjTaskComponent implements OnInit {
         data: {
           tableId: 15,
           recordId: 0,
-          userId: 26,
+          userId: this.userId,
           roleId: 2,
           languageId: Number(localStorage.getItem(this._globals.baseAppName + '_language'))
         }
@@ -267,7 +277,7 @@ export class ProjTaskComponent implements OnInit {
         data: {
           tableId: 15,
           recordId: 0,
-          userId: 26,
+          userId: this.userId,
           roleId: 2,
           languageId: Number(localStorage.getItem(this._globals.baseAppName + '_language'))
         }
@@ -333,7 +343,7 @@ export class ProjTaskComponent implements OnInit {
     this.model = {
       tableId: 116,
       recordId: 0,
-      userId: 26,
+      userId: this.userId,
       roleId: 2,
       languageId: Number(localStorage.getItem(this._globals.baseAppName + '_language'))
     };
@@ -362,7 +372,7 @@ export class ProjTaskComponent implements OnInit {
     this.model = {
       tableId: 116,
       recordId: id,
-      userId: 26,
+      userId: this.userId,
       roleId: 2,
       languageId: Number(localStorage.getItem(this._globals.baseAppName + '_language'))
     };
