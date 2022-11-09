@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { CommonService } from 'src/app/components/common/common.service';
 import { UIService } from 'src/app/components/shared/uiservices/UI.service';
 import { MessageBoxService } from 'src/app/components/messagebox/message-box.service';
@@ -15,76 +15,15 @@ import { Direction } from '@angular/cdk/bidi';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Send } from 'src/app/send.model';
 import { AppGlobals } from 'src/app/app.global';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MyFilterComponent } from '../journalentry/operation/my-filter/my-filter.component';
 import { MySortComponent } from '../journalentry/operation/my-sort/my-sort.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-const USER_DATA = [
-  {
-    id: 1,
-    name: 'John Smith',
-    occupation: 'Advisor',
-    dateOfBirth: '1984-05-05',
-    age: 36,
-  },
-  {
-    id: 2,
-    name: 'Muhi Masri',
-    occupation: 'Developer',
-    dateOfBirth: '1992-02-02',
-    age: 28,
-  },
-  {
-    id: 3,
-    name: 'Peter Adams',
-    occupation: 'HR',
-    dateOfBirth: '2000-01-01',
-    age: 20,
-  },
-  {
-    id: 4,
-    name: 'Lora Bay',
-    occupation: 'Marketing',
-    dateOfBirth: '1977-03-03',
-    age: 43,
-  },
-];
-
-const COLUMNS_SCHEMA = [
-  {
-    key: 'isSelected',
-    type: 'isSelected',
-    label: '',
-  },
-  {
-    key: 'name',
-    type: 'text',
-    label: 'Full Name',
-  },
-  {
-    key: 'occupation',
-    type: 'text',
-    label: 'Occupation',
-  },
-  {
-    key: 'dateOfBirth',
-    type: 'date',
-    label: 'Date of Birth',
-  },
-  {
-    key: 'age',
-    type: 'number',
-    label: 'Age',
-  },
-  {
-    key: 'isEdit',
-    type: 'isEdit',
-    label: '',
-  },
-];
+import { Sources } from 'src/app/source.model';
+import { ProjTaskEntryService } from './projtask-entry/projtask-entry.service';
+import { UploadService } from '../upload/upload.service';
 
 @Component({
     selector: 'app-projtask',
@@ -94,9 +33,6 @@ const COLUMNS_SCHEMA = [
 
 export class ProjTaskComponent implements OnInit {
 
-  displayedColumns1: string[] = COLUMNS_SCHEMA.map((col) => col.key);
-  dataSource1 = USER_DATA;
-  columnsSchema: any = COLUMNS_SCHEMA;
 
   taskFormGroup: FormGroup;
     displayedColumns: string[] =
@@ -111,6 +47,21 @@ export class ProjTaskComponent implements OnInit {
     recordsPerPage: number;
     currentPageIndex: number;
     menuId: number;
+
+    last: any = {
+      records: [],
+      auditColumn: {
+        approvalStatusId: 1100001,
+        companyId: 10001,
+        branchId: 201,
+        financialYearId: 1,
+        userId: 1,
+        mACAddress: "unidentified",
+        hostName: "unidentified",
+        iPAddress: "unidentified",
+        deviceType: "Win32"
+      }
+    }
 
     direction!: Direction;
     projTaskId!: string;
@@ -145,9 +96,26 @@ export class ProjTaskComponent implements OnInit {
   clickedRows = new Set<ProjTaskModel>();
   indexes!: any[];
   userId: any;
+  res: any;
   tasks: any[] = [];
   checkAssign: any;
   isShown: boolean = false;
+
+  breakpoint: number;
+  data: Sources[];
+  ver2: Sources;
+  ver3: Sources;
+  dropList: Sources[] = [];
+  light: Sources[] = [];
+  dark: Sources[] = [];
+  dropItem: Sources;
+  container: any[][] =[];
+  checkParentAccountId!:any 
+  spacezone: boolean;
+  spacepoint: any;
+  obj1: Sources;
+  obj2: Sources
+  imgHttp:string = "http://ta"
 
   items = [
     {'id': 1, 'name': 'Outliner'}, 
@@ -201,7 +169,10 @@ export class ProjTaskComponent implements OnInit {
         private _auth: AuthService,
         private _select: SelectService,
         private projtaskservice: ProjTaskService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private dapiService: ProjTaskEntryService,
+        private upload: UploadService,
+        private dialogRef: MatDialogRef<ProjTaskEntryComponent>,
       ) {
         this.pTableName = 'ProjTask';
         this.pScreenId = 116;
@@ -226,6 +197,7 @@ export class ProjTaskComponent implements OnInit {
     this._cf.setFilter("")
     this.refreshMe();
     this.initForm();
+
   }
 
   initForm() {
@@ -510,7 +482,8 @@ export class ProjTaskComponent implements OnInit {
       localStorage.setItem(this._globals.baseAppName + '_Add&Edit2', "Edit");
     }
     
-    this.openEntry2(this.model)
+    // this.openEntry2(this.model)
+    this.openForm(this.model)
   }
 
   onDelete = function(id: number) {
@@ -597,13 +570,213 @@ export class ProjTaskComponent implements OnInit {
     this.dataSource = [newRow, ...this.dataSource];
   }
 
+  onAddForm() {
+    this.model = {
+      tableId: 116,
+      recordId: 0,
+      userId: this.userId,
+      roleId: 2,
+      languageId: Number(localStorage.getItem(this._globals.baseAppName + '_language'))
+    };
+    this.openForm(this.model)
+  }
+
+  openForm(result: Send) {
+    /* Get Form Data from API */
+    
+    console.log('result in add form', result);
+    
+    this._ui.loadingStateChanged.next(true);
+      this.dapiService.Controllers(result).subscribe(res => {
+        this._ui.loadingStateChanged.next(false);
+        this.data = res;
+
+        this.data[5].access = "NoAccess"
+        this.data[6].access = "NoAccess"
+        this.data[7].access = "NoAccess"
+        this.data[8].access = "NoAccess"
+        this.data[9].access = "NoAccess"
+        this.data[10].access = "NoAccess"
+        if(localStorage.getItem(this._globals.baseAppName + '_Add&Edit2') === "Add") {
+        this.data[15].value = this._auth.getUserId()
+      }
+      
+
+        for(let i=0;i<=this.data.length;i++){
+          this.ver2 = this.data[i]
+          if (this.ver2 && this.ver2.inTransaction && this.ver2.access != "NoAccess"){
+            if (this.ver2.type === "dropdown") {
+              this.dropList.push(this.ver2);
+              console.log("droplist: ",this.dropList)
+            }
+            this.light.push(this.ver2);
+            console.log('light', this.light);
+          }else{
+            if(this.ver2) {
+              this.dark.push(this.ver2);
+            }
+          }
+        }
+        this.breakpoint =
+        window.innerWidth <= 960
+          ? 1
+          : this.data[0].maxRowSize;
+  
+        for(let k=0;k<=this.dropList.length;k++) {
+          this.dropItem = this.dropList[k]
+  
+          this._select.getDropdown(this.dropItem.refId, this.dropItem.refTable, this.dropItem.refColumn, this.dropItem.refCondition, false).subscribe((res: SelectModel[]) => {
+          this.dropList[k].myarray = res;
+          // if (this.dropList[k].tableColumnId === 1037) {
+            for (let i = 0; i < this.dropList[k].myarray.length; i++) {
+        if (this.dropList[k].myarray[i].id === Number(this.dropList[k].value)) {
+          this.dropList[k].myarray2 = this.dropList[k].myarray[i].name
+        }
+      }
+          // }
+          this.container.push(res);
+      });
+  
+        }  
+      })
+  }
   showForm() {
     this.isShown = true;
   }
 
-  onSubmit() {
-    let data = this.taskFormGroup.value;
-    console.log('data', data)
+  onParent(){}
+
+  onResize(event:any) {
+    this.spacepoint =
+      event.target.innerWidth <= 960
+        ? (this.spacezone = false)
+        : (this.spacezone = true);
+    this.breakpoint =
+      event.target.innerWidth <= 960
+        ? 1
+        : this.data[0].maxRowSize;
   }
+
+  onSubmit() {
+    this.data.forEach((Object)=> this.light.forEach((obj)=>
+    {
+      if(Object.tableColumnId === obj.tableColumnId){
+        Object.value = obj.value
+      }
+    }));
+	
+    for(let i=0;i<=this.data.length;i++){
+      this.obj1 = this.data[i];
+       if(this.obj1 ){
+         this.last.records.push(this.obj1);
+       }
+     }
+
+     this.last.records.forEach((Object2:any)=> {
+      if(Object2 && Object2.tableColumnId === 248){
+        if(this.upload.imgFullPath != null) {
+          Object2.value = this.imgHttp.concat(this.upload.imgFullPath.substring(this.upload.imgFullPath.indexOf('h') + 1))
+        }else {
+          Object2.value = Object2.value
+        }
+        
+      }else if(Object2 && Object2.tableColumnId === 1027){
+        if(this.upload.imgApiPath != null) {
+          Object2.value = this.upload.imgApiPath
+        }else {
+          Object2.value = Object2.value
+        }
+        
+      }else if(Object2 && Object2.tableColumnId === 1028){
+        if(this.upload.imgExtention != null) {
+          Object2.value = this.upload.imgExtention
+        }else {
+          Object2.value = Object2.value
+        }
+        
+      }else if(Object2 && Object2.tableColumnId === 1029){
+        if(this.upload.imgFileName != null) {
+          Object2.value = this.upload.imgFileName
+        }else {
+          Object2.value = Object2.value
+        }
+        
+      }
+      // else if(Object2.tableColumnId === 15){
+      //   Object2.value = this.dapiService.imgFullPath
+      // }
+      else if(Object2 && Object2.tableColumnId === 1031){
+        if(this.upload.imgOriginalFileName != null) {
+          Object2.value = this.upload.imgOriginalFileName
+        }else {
+          Object2.value = Object2.value
+        }
+        
+      }
+    })
+
+     console.log(this.last);
+     this.last.records.sort(function(a:any, b:any) { 
+      return a.applicationOrder - b.applicationOrder  ||  a.label.localeCompare(b.label);
+    });
+
+          if(this.last.records[0].entryMode == "A"){
+           this.last.auditColumn = this._auth.getAuditColumns();
+           this.dapiService.EntryA(this.last).subscribe(nexto => {
+             this.res = nexto;
+             if(localStorage.getItem(this._globals.baseAppName + '_language') == "16001") {
+              this._msg.showInfo("Message", "saved succesfully");
+              window.location.reload();
+            this.dialogRef.close();
+            }else if(localStorage.getItem(this._globals.baseAppName + '_language') == "16002") {
+              this._msg.showInfo("رسالة", "تم الحفظ بنجاح");
+              window.location.reload();
+            this.dialogRef.close();
+            }
+     
+           }, error => {
+             console.log(error);
+             if(localStorage.getItem(this._globals.baseAppName + '_language') == "16001") {
+              this._msg.showInfo("Message", "Error!!");
+            this.dialogRef.close();
+            }else if(localStorage.getItem(this._globals.baseAppName + '_language') == "16002") {
+              this._msg.showInfo("رسالة", "توجد مشكلة");
+            this.dialogRef.close();
+            }
+           });
+         }else if(this.last.records[0].entryMode == "E"){
+           this.last.auditColumn = this._auth.getAuditColumns();
+           this.dapiService.EntryE(this.last).subscribe(nexto => {
+             this.res = nexto;
+             if(localStorage.getItem(this._globals.baseAppName + '_language') == "16001") {
+              this._msg.showInfo("Message", "saved succesfully");
+              window.location.reload();
+            this.dialogRef.close();
+            }else if(localStorage.getItem(this._globals.baseAppName + '_language') == "16002") {
+              this._msg.showInfo("رسالة", "تم الحفظ بنجاح");
+              window.location.reload();
+            this.dialogRef.close();
+            }
+     
+           }, error => {
+             if(localStorage.getItem(this._globals.baseAppName + '_language') == "16001") {
+              this._msg.showInfo("Message", "Error!!");
+            this.dialogRef.close();
+            }else if(localStorage.getItem(this._globals.baseAppName + '_language') == "16002") {
+              
+              this._msg.showInfo("خطأ!!", "توجد مشكلة");
+            this.dialogRef.close();
+            }
+           });
+         }
+      }
+
+      onCancel() {
+        this.dialogRef.close();
+      }
+  // onSubmit() {
+  //   let data = this.taskFormGroup.value;
+  //   console.log('data', data)
+  // }
 
 }
