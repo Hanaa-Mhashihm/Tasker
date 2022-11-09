@@ -86,7 +86,7 @@
 
     <ng-container matColumnDef="Comment">
       <mat-header-cell class="centH" *matHeaderCellDef>{{Comment}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.comment}}</mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row" contenteditable="true">{{row.comment}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Assigned">
@@ -101,8 +101,22 @@
 
     <ng-container matColumnDef="To">
       <mat-header-cell class="centH" *matHeaderCellDef>{{To}}</mat-header-cell>
-      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.assignedToName}}</mat-cell>
+      <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.assignedToName}}
+      </mat-cell>
     </ng-container>
+
+    <!-- <ng-container matColumnDef="To">
+      <mat-cell class="cent" mat-cell *matCellDef="let row">
+        <mat-form-field  appearance="fill">
+          <mat-label>Project</mat-label>
+          <mat-select formControlName="projectName">
+            <mat-option *ngFor="let item of items" [value]="item.id">
+              {{ item.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-cell>
+    </ng-container> -->
 
     <ng-container matColumnDef="By">
       <mat-header-cell class="centH" *matHeaderCellDef>{{By}}</mat-header-cell>

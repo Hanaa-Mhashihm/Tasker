@@ -144,7 +144,7 @@ export class ProjTaskEntryComponent implements OnInit {
               console.log("droplist: ",this.dropList)
             }
             this.light.push(this.ver2);
-  
+            console.log('light', this.light);
           }else{
             if(this.ver2) {
               this.dark.push(this.ver2);

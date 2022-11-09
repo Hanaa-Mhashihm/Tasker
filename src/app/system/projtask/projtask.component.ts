@@ -22,6 +22,70 @@ import { MyFilterComponent } from '../journalentry/operation/my-filter/my-filter
 import { MySortComponent } from '../journalentry/operation/my-sort/my-sort.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+const USER_DATA = [
+  {
+    id: 1,
+    name: 'John Smith',
+    occupation: 'Advisor',
+    dateOfBirth: '1984-05-05',
+    age: 36,
+  },
+  {
+    id: 2,
+    name: 'Muhi Masri',
+    occupation: 'Developer',
+    dateOfBirth: '1992-02-02',
+    age: 28,
+  },
+  {
+    id: 3,
+    name: 'Peter Adams',
+    occupation: 'HR',
+    dateOfBirth: '2000-01-01',
+    age: 20,
+  },
+  {
+    id: 4,
+    name: 'Lora Bay',
+    occupation: 'Marketing',
+    dateOfBirth: '1977-03-03',
+    age: 43,
+  },
+];
+
+const COLUMNS_SCHEMA = [
+  {
+    key: 'isSelected',
+    type: 'isSelected',
+    label: '',
+  },
+  {
+    key: 'name',
+    type: 'text',
+    label: 'Full Name',
+  },
+  {
+    key: 'occupation',
+    type: 'text',
+    label: 'Occupation',
+  },
+  {
+    key: 'dateOfBirth',
+    type: 'date',
+    label: 'Date of Birth',
+  },
+  {
+    key: 'age',
+    type: 'number',
+    label: 'Age',
+  },
+  {
+    key: 'isEdit',
+    type: 'isEdit',
+    label: '',
+  },
+];
+
 @Component({
     selector: 'app-projtask',
     templateUrl: './projtask.component.html',
@@ -29,6 +93,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   })
 
 export class ProjTaskComponent implements OnInit {
+
+  displayedColumns1: string[] = COLUMNS_SCHEMA.map((col) => col.key);
+  dataSource1 = USER_DATA;
+  columnsSchema: any = COLUMNS_SCHEMA;
 
   taskFormGroup: FormGroup;
     displayedColumns: string[] =
@@ -397,7 +465,7 @@ export class ProjTaskComponent implements OnInit {
     });
   };
 
-  onAdd  () {
+  onAdd () {
     this.model = {
       tableId: 116,
       recordId: 0,
@@ -517,6 +585,18 @@ export class ProjTaskComponent implements OnInit {
     }
   };
 
+  addRow() {
+    const newRow = {
+      id: Date.now(),
+      name: '',
+      occupation: '',
+      dateOfBirth: '',
+      age: 0,
+      isEdit: true,
+    };
+    this.dataSource = [newRow, ...this.dataSource];
+  }
+
   showForm() {
     this.isShown = true;
   }
@@ -525,4 +605,5 @@ export class ProjTaskComponent implements OnInit {
     let data = this.taskFormGroup.value;
     console.log('data', data)
   }
+
 }
