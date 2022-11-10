@@ -453,6 +453,7 @@ export class ProjTaskComponent implements OnInit {
       localStorage.setItem(this._globals.baseAppName + '_Add&Edit2', "Add");
     }
     
+    // this.openForm(this.model)
     this.openEntry2(this.model);
   };
 
@@ -574,16 +575,23 @@ export class ProjTaskComponent implements OnInit {
     this.model = {
       tableId: 116,
       recordId: 0,
-      userId: this.userId,
-      roleId: 2,
+      userId: +this._auth.getUserId(),
+      roleId: Number(localStorage.getItem('role')),
       languageId: Number(localStorage.getItem(this._globals.baseAppName + '_language'))
     };
+    if(localStorage.getItem(this._globals.baseAppName + '_language') == "16001") {
+      localStorage.setItem(this._globals.baseAppName + '_Add&Edit', "Add Task");
+      localStorage.setItem(this._globals.baseAppName + '_Add&Edit2', "Add");
+    }else if(localStorage.getItem(this._globals.baseAppName + '_language') == "16002") {
+      localStorage.setItem(this._globals.baseAppName + '_Add&Edit', "اضافة مهمة");
+      localStorage.setItem(this._globals.baseAppName + '_Add&Edit2', "Add");
+    }
     this.openForm(this.model)
   }
 
   openForm(result: Send) {
     /* Get Form Data from API */
-    
+    result.userId = +this._auth.getUserId();
     console.log('result in add form', result);
     
     this._ui.loadingStateChanged.next(true);
@@ -598,7 +606,8 @@ export class ProjTaskComponent implements OnInit {
         this.data[9].access = "NoAccess"
         this.data[10].access = "NoAccess"
         if(localStorage.getItem(this._globals.baseAppName + '_Add&Edit2') === "Add") {
-        this.data[15].value = this._auth.getUserId()
+        this.data[15].value = this._auth.getUserId();
+        console.log('user id...........',  this.data[15].value);
       }
       
 

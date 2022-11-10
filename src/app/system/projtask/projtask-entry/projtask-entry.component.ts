@@ -132,7 +132,8 @@ export class ProjTaskEntryComponent implements OnInit {
         this.data[9].access = "NoAccess"
         this.data[10].access = "NoAccess"
         if(localStorage.getItem(this._globals.baseAppName + '_Add&Edit2') === "Add") {
-        this.data[15].value = this._auth.getUserId()
+        this.data[15].value = this._auth.getUserId();
+        console.log('user id...........',  this.data[15].value);
       }
       
 
