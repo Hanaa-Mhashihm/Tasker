@@ -100,7 +100,8 @@ export class ProjTaskComponent implements OnInit {
   tasks: any[] = [];
   checkAssign: any;
   isShown: boolean = false;
-
+  isLoading: boolean = false;
+  isOpen: boolean = false;
   breakpoint: number;
   data: Sources[];
   ver2: Sources;
@@ -220,6 +221,7 @@ export class ProjTaskComponent implements OnInit {
   }
 
   refreshMe() {
+    this.isLoading = true;
     if(localStorage.getItem(this._globals.baseAppName + '_language') == "16001") {
       this.direction = "ltr"
       this.header = "Tasker"
@@ -272,6 +274,7 @@ export class ProjTaskComponent implements OnInit {
       this.recordsPerPage, this.currentPageIndex, false).subscribe(
         (result) => {
           if (this._auth.getUniqueName() === 'milesh@markoncs.com' || 'omi@markoncs.com' || 's.muawia@markoncs.com') {
+            this.isLoading = false;
             this.totalRecords = result[0].totalRecords;
             this.recordsPerPage = this.recordsPerPage;
             result.forEach((item: any) => {
@@ -591,11 +594,13 @@ export class ProjTaskComponent implements OnInit {
 
   openForm(result: Send) {
     /* Get Form Data from API */
+    
     result.userId = +this._auth.getUserId();
     console.log('result in add form', result);
     
     this._ui.loadingStateChanged.next(true);
       this.dapiService.Controllers(result).subscribe(res => {
+        this.isOpen = true;
         this._ui.loadingStateChanged.next(false);
         this.data = res;
 
@@ -649,9 +654,9 @@ export class ProjTaskComponent implements OnInit {
         }  
       })
   }
-  showForm() {
-    this.isShown = true;
-  }
+  // showForm() {
+  //   this.isShown = true;
+  // }
 
   onParent(){}
 
