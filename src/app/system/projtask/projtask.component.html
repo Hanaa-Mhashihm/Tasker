@@ -76,11 +76,14 @@
 <!-- <Section [ngClass]="['custom-table-container']"> -->
 <Section [dir]="direction" fxHide.xs class="toolSection" mat-elevation-z8 >
 
-  <mat-table #table [dataSource]="dataSource" style="width: 100%" >
+  <mat-table #table [dataSource]="dataSource" style="width: 100%" 
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    (cdkDropListDropped)="drop($event)">
     <!-- Columns definition here to be displayed -->
 
     <ng-container matColumnDef="select">
-      <mat-header-cell class="cbPad" *matHeaderCellDef>
+      <mat-header-cell cdkDrag  class="cbPad" *matHeaderCellDef>
         <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
           [indeterminate]="selection.hasValue() && !isAllSelected()">
         </mat-checkbox>
@@ -100,37 +103,37 @@
     </ng-container> -->
 
     <ng-container matColumnDef="Project">
-      <mat-header-cell class="centH" *matHeaderCellDef>{{Project}}</mat-header-cell>
+      <mat-header-cell cdkDrag  class="centH" *matHeaderCellDef>{{Project}}</mat-header-cell>
       <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.projectName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Task">
-      <mat-header-cell class="centH" *matHeaderCellDef>{{Task}}</mat-header-cell>
+      <mat-header-cell cdkDrag  class="centH" *matHeaderCellDef>{{Task}}</mat-header-cell>
       <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.taskName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Status">
-      <mat-header-cell class="centH" *matHeaderCellDef>{{Status}}</mat-header-cell>
+      <mat-header-cell cdkDrag  class="centH" *matHeaderCellDef>{{Status}}</mat-header-cell>
       <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.statusName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Comment">
-      <mat-header-cell class="centH" *matHeaderCellDef>{{Comment}}</mat-header-cell>
+      <mat-header-cell cdkDrag class="centH" *matHeaderCellDef>{{Comment}}</mat-header-cell>
       <mat-cell class="cent" mat-cell *matCellDef="let row" >{{row.comment}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Assigned">
-      <mat-header-cell class="centH" *matHeaderCellDef>{{Assigned}}</mat-header-cell>
+      <mat-header-cell cdkDrag  class="centH" *matHeaderCellDef>{{Assigned}}</mat-header-cell>
       <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.dateAssign}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Due">
-      <mat-header-cell class="centH" *matHeaderCellDef>{{Due}}</mat-header-cell>
+      <mat-header-cell cdkDrag class="centH" *matHeaderCellDef>{{Due}}</mat-header-cell>
       <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.dueDate}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="To">
-      <mat-header-cell class="centH" *matHeaderCellDef>{{To}}</mat-header-cell>
+      <mat-header-cell cdkDrag class="centH" *matHeaderCellDef>{{To}}</mat-header-cell>
       <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.assignedToName}}
       </mat-cell>
     </ng-container>
@@ -149,17 +152,17 @@
     </ng-container> -->
 
     <ng-container matColumnDef="By">
-      <mat-header-cell class="centH" *matHeaderCellDef>{{By}}</mat-header-cell>
+      <mat-header-cell cdkDrag class="centH" *matHeaderCellDef>{{By}}</mat-header-cell>
       <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.assignedByName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Phase">
-      <mat-header-cell class="centH" *matHeaderCellDef>{{Phase}}</mat-header-cell>
+      <mat-header-cell cdkDrag class="centH" *matHeaderCellDef>{{Phase}}</mat-header-cell>
       <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.categoryName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="Responsible">
-      <mat-header-cell class="centH" *matHeaderCellDef>{{Responsible}}</mat-header-cell>
+      <mat-header-cell cdkDrag class="centH" *matHeaderCellDef>{{Responsible}}</mat-header-cell>
       <mat-cell class="cent" mat-cell *matCellDef="let row">{{row.responsibleName}}</mat-cell>
     </ng-container>
 

@@ -24,6 +24,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Sources } from 'src/app/source.model';
 import { ProjTaskEntryService } from './projtask-entry/projtask-entry.service';
 import { UploadService } from '../upload/upload.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'app-projtask',
@@ -201,6 +202,10 @@ export class ProjTaskComponent implements OnInit {
 
   }
 
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.displayedColumns, event.previousIndex, event.currentIndex);
+  }
+  
   initForm() {
     this.taskFormGroup = this.fb.group({
       projectName: [null, Validators.required],
